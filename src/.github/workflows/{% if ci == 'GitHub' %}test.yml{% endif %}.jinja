@@ -178,7 +178,10 @@ jobs:
       {%- endif %}
       {% raw -%}
       - name: Update .pot files
-        run: oca_export_and_push_pot https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
+        run: |
+          git config --global --add safe.directory "$(pwd)"
+          git remote set-url origin https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
+          oca_export_and_push_pot https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
       {%- endraw %}
         {% raw %}
         if: ${{ matrix.makepot == 'true' && github.event_name == 'push' }}
