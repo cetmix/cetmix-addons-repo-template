@@ -36,7 +36,7 @@ Refresh after each successful sync.
 | `684b4136adbd0a22b7c7f3ef1b87568379c090d6` | `src/README.md.jinja` |
 | `3bad668f26316903e7ba8fb5b259ce6acbdfd34a` | `src/.github/workflows/pre-commit.yml.jinja` |
 | `98f782cd95696b1deeebf7f3f4f77e1d8b354bef` | `src/.github/workflows/test.yml.jinja` |
-| `0bd92f20f43c1074cc87ef7df2c008a0e446867d` | `src/{% if github_odoo_ee %}runboat.ee{% endif %}.jinja` |
+| `cd6290cec68b95f98e17069ce7917c70d80274bc` | `src/{% if github_odoo_ee %}runboat.ee{% endif %}.jinja` |
 | `a65ece78e38a7bf392bb6880d586420c725916a5` | `version-specific/mqt-compat/.pylintrc-mandatory.jinja` |
 
 ## OCA tip differences to expect
