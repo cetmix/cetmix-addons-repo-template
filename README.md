@@ -29,7 +29,7 @@ pipx install copier
 pipx install pre-commit
 pipx ensurepath
 # Clone this template and answer its questions
-copier copy --UNSAFE -r HEAD https://github.com/cetmix/cetmix-addons-repo-template.git some-repo
+copier copy -r HEAD https://github.com/cetmix/cetmix-addons-repo-template.git some-repo
 # Commit that
 cd some-repo
 git add .
@@ -43,7 +43,7 @@ Quick answer to update a repo:
 ```bash
 # Update the repo
 cd some-repo
-copier update --UNSAFE -r HEAD
+copier update -r HEAD
 # Reformat updated files
 pre-commit run
 # Commit update

@@ -1,3 +1,4 @@
+{% from 'src/.pre-commit-config.yaml.jinja' import repo_rev with context %}
 name: pre-commit
 
 on:
@@ -9,13 +10,13 @@ on:
       - "{{ odoo_version }}"
       - "{{ odoo_version }}-dev"
 
+concurrency:
+  group: {% raw %}${{ github.workflow }}-${{ github.ref }}{% endraw %}
+  cancel-in-progress: true
+
 jobs:
   pre-commit:
-{%- if odoo_version < 14 %}
-    runs-on: ubuntu-20.04
-{%- else %}
     runs-on: ubuntu-22.04
-{%- endif %}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,14 +25,16 @@ jobs:
           python-version: "2.7"
 {%- elif odoo_version < 13 %}
         with:
-          python-version: "3.6"
+          python-version: "3.7"
 {%- elif odoo_version < 14 %}
         with:
           python-version: "3.8"
 {%- else %}
         with:
-          python-version: "3.11"
+          python-version: "{{ repo_rev.python |replace('python','') }}"
 {%- endif %}
+          cache: 'pip'
+          cache-dependency-path: '.pre-commit-config.yaml'
       - name: Get python version
         run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
       - uses: actions/cache@v4
