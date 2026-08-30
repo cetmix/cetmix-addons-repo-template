@@ -76,31 +76,27 @@ def test_bootstrap(tmp_path: Path, odoo_version: float, cloned_template: Path):
         isort = (tmp_path / ".isort.cfg").read_text()
         assert "[settings]" in isort
     assert not (tmp_path / ".gitmodules").is_file()
-    # Assert other files
-    license_ = (tmp_path / "LICENSE").read_text()
-    assert "GNU AFFERO GENERAL PUBLIC LICENSE" in license_
+    # Cetmix: no repo-level AGPL LICENSE (multi-license / OPL-1 addon repos)
+    assert not (tmp_path / "LICENSE").exists()
     # Workflows for the subprojects are copied
     assert (tmp_path / ".github" / "workflows" / "pre-commit.yml").is_file()
     assert (tmp_path / ".github" / "workflows" / "stale.yml").is_file()
     # Workflows for the template itself are not copied
     assert not (tmp_path / ".github" / "workflows" / "lint.yml").is_file()
-    # Assert badges in readme; this is testing the repo_id macro
+    # Assert badges in readme (defaults: org_slug=cetmix)
     readme = (tmp_path / "README.md").read_text()
     assert (
-        f"[![Runboat](https://img.shields.io/badge/runboat-Try%20me-875A7B.png)](https://runboat.odoo-community.org/builds?repo=OCA/{REPO_SLUG}&target_branch={odoo_version})"  # noqa: B950
+        f"[![Runboat](https://img.shields.io/badge/runboat-Try%20me-875A7B.png)](https://runboat.cetmix.com/webui/builds.html?repo=cetmix/{REPO_SLUG}&target_branch={odoo_version})"  # noqa: B950
         in readme
     )
     assert (
-        f"[![codecov](https://codecov.io/gh/OCA/{REPO_SLUG}/branch/{odoo_version}/graph/badge.svg)](https://codecov.io/gh/OCA/{REPO_SLUG})"  # noqa: B950
-        in readme
-    )
-    odoo_version_tr = str(odoo_version).replace(".", "-")
-    assert (
-        f"[![Translation Status](https://translation.odoo-community.org/widgets/{REPO_SLUG}-{odoo_version_tr}/-/svg-badge.svg)](https://translation.odoo-community.org/engage/{REPO_SLUG}-{odoo_version_tr}/?utm_source=widget)"  # noqa: B950
+        f"[![codecov](https://codecov.io/gh/cetmix/{REPO_SLUG}/branch/{odoo_version}/graph/badge.svg)](https://codecov.io/gh/cetmix/{REPO_SLUG})"  # noqa: B950
         in readme
     )
     assert "# Test repo" in readme
     assert data["repo_description"] in readme
+    # EE marker when github_odoo_ee defaults to yes
+    assert (tmp_path / "runboat.ee").is_file()
     # Assert no stuff specific for this repo is found
     garbage = (
         "setup.cfg",

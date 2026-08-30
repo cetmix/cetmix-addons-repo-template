@@ -89,7 +89,7 @@ postgres_image:
   help: "Custom PostgreSQL Docker image to use in CI (e.g. pgvector/pgvector:pg16). Leave empty to use the default image for the Odoo version."
 
 use_ruff:
-  default: yes
+  default: "{% if odoo_version < 17.0 -%}no{% else %}yes{% endif %}"
   type: bool
   help: Use ruff and ruff-format instead of flake8, autoflake, pyupgrade, isort, black.
   when: "{{ odoo_version >= 14.0 }}"
@@ -138,7 +138,6 @@ github_odoo_ee:
   type: bool
   default: yes
   help: Test using Odoo EE modules?
-  when: *ci_is_github
 
 github_enable_codecov:
   type: bool
