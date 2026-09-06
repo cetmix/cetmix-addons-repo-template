@@ -26,7 +26,8 @@ Authoritative inventory: [docs/CETMIX_CUSTOMIZATIONS.md](../../../docs/CETMIX_CU
 | Maintainer-tools | `src/.pre-commit-config.yaml.jinja` | `repo: https://github.com/cetmix/cetmix-maintainer-tools` + Cetmix SHAs |
 | Copier defaults | `copier.yml` | `org_slug`/`org_name`/`repo_website` Cetmix; keep `github_odoo_ee` |
 | OPL-1 | `src/.pylintrc-mandatory.jinja`, `version-specific/mqt-compat/.pylintrc-mandatory.jinja` | `OPL-1` in allowed licenses |
-| CI EE + pot | GitHub `test` workflow jinja (`src/.github/workflows/test.yml.jinja`) | EE tarball + `GIT_PUSH_TOKEN` pot push + `-dev` branches |
+| CI EE + pot | GitHub `test` workflow jinja (`src/.github/workflows/test.yml.jinja`) | EE tarball + `GIT_PUSH_TOKEN` pot push + `-dev` branches; **no** `ocabot-*` on push |
+| CI merge-bot | `src/.github/workflows/pre-commit.yml.jinja` | Push includes `-dev` **and** `ocabot-*` so `/ocabot merge` only waits on pre-commit |
 | Runboat | `src/README.md.jinja`, `runboat.ee` jinja | Cetmix Runboat URL / EE marker |
 | Branding | `README.md`, `CONTRIBUTING.md`, `pyproject.toml` | Cetmix names and clone URLs |
 | LICENSE | `src/LICENSE` | Stay absent unless user asks to restore |
@@ -76,6 +77,7 @@ EOF
 Restore preserve-list content from `$PRESYNC` where OCA overwrote Cetmix behavior. Special cases:
 
 - **Workflow rename:** OCA uses `src/.github/workflows/test.yml.jinja`; Cetmix may still have `{% if ci == 'GitHub' %}test.yml{% endif %}.jinja`. After merge, keep a single rendered path: port Cetmix EE / pot / `-dev` / `RUNBOAT_GITHUB_TOKEN` into the surviving file, remove duplicates.
+- **ocabot push triggers:** OCA runs both `test` and `pre-commit` on `{{ odoo_version }}-ocabot-*`. Cetmix only runs **pre-commit** on those branches so the merge bot does not wait for Odoo/OCB. After sync, strip `ocabot-*` from `test.yml` if OCA re-added it, and keep it on `pre-commit.yml`.
 - **pre-commit URL:** force `cetmix/cetmix-maintainer-tools` even if OCA reset pins/URL.
 - **pylintrc:** re-add `OPL-1`; do not leave OCA-only license lists.
 - **`src/LICENSE`:** if merge restored it, `git rm` unless the user wants it back.

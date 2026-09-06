@@ -71,12 +71,18 @@ When merging OCA pylint check lists (`deprecated-module`, `deprecated-self-cr`, 
 
 Cetmix `test.yml` must keep:
 
-- Push branches include `{{ odoo_version }}-dev` (not only `ocabot-*`).
+- Push branches include `{{ odoo_version }}-dev`.
+- Push branches must **not** include `{{ odoo_version }}-ocabot-*` (OCA does; Cetmix does not — see below).
 - `RUNBOAT_GITHUB_TOKEN: ${{ secrets.GIT_PUSH_TOKEN }}`.
 - When `github_odoo_ee`: clone `cetmix/enterprise` tarball for `$ODOO_VERSION` into `$ADDONS_PATH` using `secrets.GIT_PUSH_TOKEN`.
 - `.pot` export uses `GIT_PUSH_TOKEN` / `x-access-token` so private repos can push (commit `31fc855`).
 
-On OCA sync: do **not** drop these blocks when adopting OCA workflow renames/structure. Prefer porting Cetmix EE/pot/dev-branch behavior into whatever filename OCA uses, then delete the obsolete Cetmix-only path if both would render.
+Cetmix `pre-commit.yml` must keep:
+
+- Push branches include `{{ odoo_version }}-dev` **and** `{{ odoo_version }}-ocabot-*`.
+- **Merge-bot gate:** `/ocabot merge` prepares a `*-ocabot-merge-pr-*` branch and waits for a completed successful check suite on that commit. Only pre-commit is triggered on those branches so the bot does not wait for Odoo/OCB (or for Runboat when `norunboat` is present). Do not re-add `ocabot-*` to `test.yml` “to match OCA”.
+
+On OCA sync: do **not** drop these blocks when adopting OCA workflow renames/structure. Prefer porting Cetmix EE/pot/dev-branch/ocabot-pre-commit-only behavior into whatever filename OCA uses, then delete the obsolete Cetmix-only path if both would render.
 
 ## 5. Repo README badges and Runboat
 
@@ -96,7 +102,8 @@ Cetmix tree has **no** `src/LICENSE` while OCA still ships AGPL text there. Trea
 
 | Observation | Action |
 |-------------|--------|
-| OCA renames workflow to `test.yml.jinja`, adds `postgres_image`, renovate, uv.lock, pylint check updates | Take OCA structure/features, then **re-apply** EE / pot / `-dev` / Cetmix maintainer-tools / OPL-1 |
+| OCA renames workflow to `test.yml.jinja`, adds `postgres_image`, renovate, uv.lock, pylint check updates | Take OCA structure/features, then **re-apply** EE / pot / `-dev` / Cetmix maintainer-tools / OPL-1 / pre-commit-only `ocabot-*` |
+| OCA adds `{{ odoo_version }}-ocabot-*` to `test.yml` push branches | Remove it from `test.yml`; keep it only on `pre-commit.yml` |
 | Stale pin drift vs latest `cetmix-maintainer-tools` | Fix via bump skill; not an excuse to point back at OCA maintainer-tools |
 | Cosmetic comment URL `cetmix/maintainer-quality-tools` in eslintrc | Harmless; optional fix |
 

@@ -8,6 +8,8 @@ on:
     branches:
       - "{{ odoo_version }}"
       - "{{ odoo_version }}-dev"
+      # Merge-bot temporary branches are intentionally omitted: only pre-commit
+      # runs on them (see pre-commit.yml.jinja + docs/CETMIX_CUSTOMIZATIONS.md).
 
 concurrency:
   group: {% raw %}${{ github.workflow }}-${{ github.ref }}{% endraw %}

@@ -81,6 +81,12 @@ def test_bootstrap(tmp_path: Path, odoo_version: float, cloned_template: Path):
     # Workflows for the subprojects are copied
     assert (tmp_path / ".github" / "workflows" / "pre-commit.yml").is_file()
     assert (tmp_path / ".github" / "workflows" / "stale.yml").is_file()
+    # Merge-bot branches: pre-commit only (not the full Odoo/OCB suite)
+    pre_commit_wf = (tmp_path / ".github" / "workflows" / "pre-commit.yml").read_text()
+    test_wf = (tmp_path / ".github" / "workflows" / "test.yml").read_text()
+    ocabot_branch = f'- "{odoo_version}-ocabot-*"'
+    assert ocabot_branch in pre_commit_wf
+    assert ocabot_branch not in test_wf
     # Workflows for the template itself are not copied
     assert not (tmp_path / ".github" / "workflows" / "lint.yml").is_file()
     # Assert badges in readme (defaults: org_slug=cetmix)

@@ -9,6 +9,10 @@ on:
     branches:
       - "{{ odoo_version }}"
       - "{{ odoo_version }}-dev"
+      # Merge-bot temporary branches: only pre-commit runs here so /ocabot merge
+      # can finish without waiting for the full Odoo/OCB test suite (see
+      # docs/CETMIX_CUSTOMIZATIONS.md). Do not add this pattern to test.yml.
+      - "{{ odoo_version }}-ocabot-*"
 
 concurrency:
   group: {% raw %}${{ github.workflow }}-${{ github.ref }}{% endraw %}
