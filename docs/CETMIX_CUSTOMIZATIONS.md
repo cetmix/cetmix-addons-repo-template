@@ -30,7 +30,7 @@ Only the changes below are intentional Cetmix customizations. Everything else sh
 
 - Package/name: `cetmix-addons-repo-template`; authors Cetmix.
 - Bootstrap/update docs use `https://github.com/cetmix/cetmix-addons-repo-template.git` with `copier … -r HEAD` (no `--UNSAFE` needed on current Copier).
-- Defaults: `org_slug=cetmix`, `org_name=Cetmix`, `repo_website=https://cetmix.com`, `odoo_version=19.0`.
+- Defaults: `org_slug=cetmix`, `org_name=Cetmix`, `repo_website=https://cetmix.com`, `odoo_version=20.0` (tracks OCA).
 - `use_ruff` follows OCA: yes for Odoo ≥ 17, no for 14–16 (question hidden below 14).
 - Extra question: `github_odoo_ee` (default `yes`) — load Cetmix enterprise addons in CI.
 - Extra question from OCA: `postgres_image` (optional).
